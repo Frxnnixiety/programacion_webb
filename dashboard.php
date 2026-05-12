@@ -95,25 +95,27 @@ body{
     <!-- CARRUSEL -->
     <div id="carouselExample" class="carousel slide">
 
-        <div class="carousel-inner" id="contenedorCarrusel">
-
-        </div>
-
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </button>
-
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </button>
+    <div class="carousel-inner" id="contenedorCarrusel">
 
     </div>
 
-    <!-- GALERIA -->
-    <div class="row mt-5" id="galeria">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
 
-    </div>
+        <span class="carousel-control-prev-icon"></span>
 
+    </button>
+
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+
+        <span class="carousel-control-next-icon"></span>
+
+    </button>
+
+</div>
+
+<div class="row mt-5" id="galeria">
+
+</div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

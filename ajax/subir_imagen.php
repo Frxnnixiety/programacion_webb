@@ -2,8 +2,10 @@
 include("../config/conexion.php");
 
 // Recibir datos del formulario (Asegúrate de que coincidan con tu JS)
-$nombre = $_POST['nombre'] ?? 'Sin nombre';
-$ruta = $_POST['ruta'] ?? ''; 
+$nombre = time() . "_" . $_FILES['imagen']['name'];
+$ruta = "../uploads/" . $nombre;
+move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta);
+
 $usuario_id = $_POST['usuario_id'] ?? 1;
 
 // 1. INSERTAR EN MARIADB (Genera ID automático)
