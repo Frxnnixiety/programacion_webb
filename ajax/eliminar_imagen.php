@@ -1,23 +1,24 @@
 <?php
 include("../config/conexion.php");
 
+// Obtenemos la conexión PDO llamando a la función del archivo conexion.php
+$conexion = conectarDB();
+
 $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 
 if ($id > 0) {
-    // Borrado en Postgres
     try {
-        $pdo_postgres->exec("DELETE FROM imagenes WHERE id = $id");
+        // Preparar la sentencia usando el objeto PDO $conexion
+        $sql_m = "DELETE FROM imagenes WHERE id = ?";
+        $stmt_m = $conexion->prepare($sql_m);
+        
+        // En PDO, pasamos los parámetros directamente en el execute
+        if ($stmt_m->execute([$id])) {
+            echo "OK"; 
+        }
     } catch (PDOException $e) {
-        error_log("Error Postgres: " . $e->getMessage());
-    }
-
-    // Borrado en MariaDB
-    $sql_m = "DELETE FROM imagenes WHERE id = ?";
-    $stmt_m = $conexion->prepare($sql_m);
-    $stmt_m->bind_param("i", $id);
-    
-    if ($stmt_m->execute()) {
-        echo "OK"; 
+        error_log("Error MariaDB: " . $e->getMessage());
+        echo "Error al eliminar";
     }
 }
 ?>

@@ -1,45 +1,27 @@
 <?php
-
 session_start();
-
 include("../config/conexion.php");
+$conexion = conectarDB();
 
 $correo = $_POST['correo'];
-
 $password = $_POST['password'];
 
-$sql = "SELECT * FROM usuarios WHERE correo=?";
-
+$sql = "SELECT * FROM usuarios WHERE correo = ?";
 $stmt = $conexion->prepare($sql);
+$stmt->execute([$correo]);
 
-$stmt->bind_param("s",$correo);
+// Obtenemos el usuario
+$usuario = $stmt->fetch();
 
-$stmt->execute();
-
-$resultado = $stmt->get_result();
-
-if($resultado->num_rows > 0){
-
-    $usuario = $resultado->fetch_assoc();
-
-    if(password_verify($password,$usuario['password'])){
-
+if($usuario){
+    if(password_verify($password, $usuario['password'])){
         $_SESSION['usuario'] = $usuario['nombre'];
-
         $_SESSION['id_usuario'] = $usuario['id'];
-
         header("Location: ../dashboard.php");
-
-    }else{
-
+    } else {
         echo "Contraseña incorrecta";
-
     }
-
-}else{
-
+} else {
     echo "Usuario no encontrado";
-
 }
-
 ?>

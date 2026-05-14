@@ -1,36 +1,29 @@
 <?php
 
-// --- CONEXIÓN ORIGINAL MARIADB (No se toca nada) ---
-$conexion = new mysqli(
-    "localhost",
-    "root",
-    "",
-    "galeria_ajax",
-    3307
-);
+function conectarDB() {
+    $host = "localhost";
+    $db   = "galeria_ajax";
+    $user = "ffuentes";
+    $pass = "frxn085";
+    $charset = "utf8mb4";
 
-if($conexion->connect_error){
-    die("Error de conexión");
+    // El DSN (Data Source Name) define el tipo de driver y los datos del servidor
+    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+
+    // Opciones recomendadas para PDO
+    $options = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Lanza errores como excepciones
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       // Devuelve los datos como array asociativo
+        PDO::ATTR_EMULATE_PREPARES   => false,                  // Usa consultas preparadas reales
+    ];
+
+    try {
+        return new PDO($dsn, $user, $pass, $options);
+    } catch (\PDOException $e) {
+        // En producción, no muestres $e->getMessage() al usuario, regístralo en un log
+        die("Error de conexión: " . $e->getMessage());
+    }
 }
 
-// --- AGREGANDO CONEXIÓN POSTGRESQL ---
-$host_p = 'localhost';
-$port_p = '5432'; // Puerto por defecto de Postgres
-$db_p   = 'galeria_ajax';
-$user_p = 'postgres';
-$pass_p = '123456789'; // Reemplaza con la contraseña que configuraste
-
-try {
-    // Usamos PDO para la conexión a PostgreSQL
-    $pdo_postgres = new PDO("pgsql:host=$host_p;port=$port_p;dbname=$db_p", $user_p, $pass_p);
-    
-    // Configuramos para que lance excepciones en caso de error
-    $pdo_postgres->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-} catch (PDOException $e) {
-    // Si falla Postgres, mostramos el error (puedes cambiarlo a die si prefieres que se detenga todo)
-    echo "Error en la conexión de PostgreSQL: " . $e->getMessage();
-}
 
 ?>
-
