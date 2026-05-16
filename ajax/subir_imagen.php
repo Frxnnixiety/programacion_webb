@@ -2,28 +2,33 @@
 include("../config/conexion.php");
 $conexion = conectarDB();
 
-// SOLUCIÓN PARA ESPACIOS: Reemplaza los espacios vacíos por guiones bajos (_)
+// 1. Limpiamos espacios para que Apache en Linux no rompa la URL
 $nombre_limpio = str_replace(' ', '_', $_FILES['imagen']['name']);
-
-// Unimos el timestamp único con el nombre limpio sin espacios
 $nombre = time() . "_" . $nombre_limpio;
-$ruta = "../uploads/" . $nombre;
 
-// Movemos el archivo físico temporal a la carpeta de uploads con el nombre limpio
-move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta);
+// Ruta física para mover el archivo dentro del servidor
+$ruta_fisica = "../uploads/" . $nombre;
 
-$usuario_id = $_POST['usuario_id'] ?? 1;
+// 2. Ruta limpia que se guardará en la BD (SIN el "../" para no confundir a JS)
+$ruta_bd = "uploads/" . $nombre;
 
-try {
-    $sql_m = "INSERT INTO imagenes (nombre, ruta, usuario_id) VALUES (?, ?, ?)";
-    $stmt_m = $conexion->prepare($sql_m);
-    
-    if ($stmt_m->execute([$nombre, $ruta, $usuario_id])) {
-        echo "OK"; 
-    } else {
-        echo "Error en MariaDB";
+if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_fisica)) {
+    $usuario_id = $_POST['usuario_id'] ?? 1;
+
+    try {
+        // Guardamos la ruta limpia directamente
+        $sql_m = "INSERT INTO imagenes (nombre, ruta, usuario_id) VALUES (?, ?, ?)";
+        $stmt_m = $conexion->prepare($sql_m);
+        
+        if ($stmt_m->execute([$nombre, $ruta_bd, $usuario_id])) {
+            echo "OK"; 
+        } else {
+            echo "Error en MariaDB";
+        }
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
+} else {
+    echo "Error: El servidor no pudo guardar el archivo físico en uploads/.";
 }
 ?>

@@ -20,7 +20,6 @@ $(document).ready(function(){
         });
     });
 });
-
 function cargarImagenes() {
     $.ajax({
         url: "ajax/obtener_imagenes.php",
@@ -32,16 +31,8 @@ function cargarImagenes() {
                 let galeria = '';
 
                 datos.forEach((img, index) => {
-                    // 1. Limpiamos espacios basura que pueda traer el registro
-                    let rutaLimpia = img.ruta.trim();
-                    
-                    // 2. Si la ruta guardada viene con "../", se lo quitamos en JS por si acaso
-                    if (rutaLimpia.startsWith('../')) {
-                        rutaLimpia = rutaLimpia.substring(3);
-                    }
-
-                    // 3. La URL final es puramente la ruta relativa
-                    let urlFinal = rutaLimpia;
+                    // Tomamos la ruta directa que viene de la BD
+                    let urlFinal = img.ruta.trim();
 
                     // Carrusel
                     carrusel += `
