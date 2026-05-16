@@ -1,26 +1,26 @@
 <?php
-// db-pgsql.php
+// conexion.php
 
-function conectarPostgres() {
-    $host = "127.0.0.1";        // Cambiado de localhost a la IP local para Postgres
-    $port = "5432";
-    $db   = "galeria_postgres"; // Tu base de datos limpia
-    $user = "ffuentes";         // Tu usuario real
-    $pass = "frxn085";         // Tu contraseña real
+$host = "127.0.0.1";        // Tu servidor local de Postgres
+$port = "5432";             // Puerto oficial de PostgreSQL
+$db   = "galeria_postgres"; // Tu base de datos limpia y asignada a tu usuario
+$user = "ffuentes";         // Tu usuario real de Postgres
+$pass = "frxn085";         // Tu contraseña real
 
-    // El DSN cambia el prefijo a 'pgsql'
-    $dsn = "pgsql:host=$host;port=$port;dbname=$db";
+$dsn = "pgsql:host=$host;port=$port;dbname=$db";
 
-    try {
-        // Creamos la instancia de PDO
-        $pdo = new PDO($dsn, $user, $pass, [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]);
+try {
+    // Creamos la conexión directa usando PDO con el controlador de PostgreSQL
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
 
-        return $pdo;
-    } catch (PDOException $e) {
-        die("Error de conexión: " . $e->getMessage());
-    }
+    // Creamos un alias por si tus otros archivos PHP mandan a llamar a la conexión
+    // usando la variable $conexion en lugar de $pdo
+    $conexion = $pdo;
+
+} catch (PDOException $e) {
+    die("Error de conexión con PostgreSQL: " . $e->getMessage());
 }
 ?>
