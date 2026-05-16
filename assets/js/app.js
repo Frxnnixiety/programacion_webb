@@ -3,41 +3,24 @@ $(document).ready(function(){
     cargarImagenes();
 
     $("#formImagen").submit(function(e){
-
         e.preventDefault();
-
         let formData = new FormData(this);
 
         $.ajax({
-
             url:"ajax/subir_imagen.php",
-
             type:"POST",
-
             data:formData,
-
             contentType:false,
-
             processData:false,
-
             success:function(respuesta){
-
                 alert(respuesta);
-
                 cargarImagenes();
-
                 $("#formImagen")[0].reset();
-
             }
-
         });
-
     });
-
 });
 
-
-//
 function cargarImagenes() {
     $.ajax({
         url: "ajax/obtener_imagenes.php",
@@ -48,21 +31,17 @@ function cargarImagenes() {
                 let carrusel = '';
                 let galeria = '';
 
-                // Definimos la base exacta según tu servidor
-                const baseUrl = "http://localhost:8012/GaleriaAjax/";
-
                 datos.forEach((img, index) => {
-                    // 1. Limpiamos la ruta que viene de la DB por si tiene basura
+                    // 1. Limpiamos espacios basura que pueda traer el registro
                     let rutaLimpia = img.ruta.trim();
                     
-                    // 2. Si la ruta de la DB no incluye "uploads/", se lo ponemos
-                    // (Esto depende de cómo guardes en la DB, normalmente ya lo trae)
-                    if (!rutaLimpia.startsWith('uploads/')) {
-                        rutaLimpia = 'uploads/' + rutaLimpia;
+                    // 2. Si la ruta guardada viene con "../", se lo quitamos en JS por si acaso
+                    if (rutaLimpia.startsWith('../')) {
+                        rutaLimpia = rutaLimpia.substring(3);
                     }
 
-                    // 3. Construimos la URL final absoluta
-                    let urlFinal = baseUrl + rutaLimpia;
+                    // 3. La URL final es puramente la ruta relativa
+                    let urlFinal = rutaLimpia;
 
                     // Carrusel
                     carrusel += `
@@ -96,27 +75,15 @@ function cargarImagenes() {
 }
 
 function eliminarImagen(id){
-
     if(confirm("¿Eliminar imagen?")){
-
         $.ajax({
-
             url:"ajax/eliminar_imagen.php",
-
             type:"POST",
-
             data:{id:id},
-
             success:function(respuesta){
-
                 alert(respuesta);
-
                 cargarImagenes();
-
             }
-
         });
-
     }
-
 }
