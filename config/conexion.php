@@ -1,29 +1,19 @@
 <?php
-
+// Ejemplo rápido de cómo cambiaría tu PDO en la rama 'postgres-db'
 function conectarDB() {
-    $host = "localhost";
-    $db   = "galeria_ajax";
-    $user = "ffuentes";
-    $pass = "frxn085";
-    $charset = "utf8mb4";
-
-    // El DSN (Data Source Name) define el tipo de driver y los datos del servidor
-    $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-
-    // Opciones recomendadas para PDO
-    $options = [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Lanza errores como excepciones
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       // Devuelve los datos como array asociativo
-        PDO::ATTR_EMULATE_PREPARES   => false,                  // Usa consultas preparadas reales
-    ];
+    $host = 'localhost';
+    $db   = 'galeria_postgres'; // Tu nueva BD en Postgres
+    $user = 'tu_usuario_postgres';
+    $pass = 'tu_contraseña';
+    $port = '5432'; // Puerto nativo de Postgres
 
     try {
-        return new PDO($dsn, $user, $pass, $options);
-    } catch (\PDOException $e) {
-        // En producción, no muestres $e->getMessage() al usuario, regístralo en un log
+        // Cambiamos el driver de 'mysql' a 'pgsql'
+        $conexion = new PDO("pgsql:host=$host;port=$port;dbname=$db", $user, $pass);
+        $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        return $conexion;
+    } catch (PDOException $e) {
         die("Error de conexión: " . $e->getMessage());
     }
 }
-
-
 ?>
