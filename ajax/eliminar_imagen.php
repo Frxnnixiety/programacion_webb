@@ -1,8 +1,10 @@
 <?php
 include("../config/conexion.php");
 
-// Obtenemos la conexión PDO llamando a la función del archivo conexion.php
-$conexion = conectarDB();
+// En Postgres la conexión se activa directo en $conexion o $pdo
+if (!isset($conexion) && isset($pdo)) {
+    $conexion = $pdo;
+}
 
 $id = isset($_POST['id']) ? (int)$_POST['id'] : 0;
 
@@ -17,7 +19,7 @@ if ($id > 0) {
             echo "OK"; 
         }
     } catch (PDOException $e) {
-        error_log("Error MariaDB: " . $e->getMessage());
+        error_log("Error Postgres: " . $e->getMessage());
         echo "Error al eliminar";
     }
 }

@@ -1,6 +1,9 @@
 <?php
 include("../config/conexion.php");
-$conexion = conectarDB();
+
+if (!isset($conexion) && isset($pdo)) {
+    $conexion = $pdo;
+}
 
 // 1. Limpiamos espacios para que Apache en Linux no rompa la URL
 $nombre_limpio = str_replace(' ', '_', $_FILES['imagen']['name']);
@@ -23,7 +26,7 @@ if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_fisica)) {
         if ($stmt_m->execute([$nombre, $ruta_bd, $usuario_id])) {
             echo "OK"; 
         } else {
-            echo "Error en MariaDB";
+            echo "Error en Postgres";
         }
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();

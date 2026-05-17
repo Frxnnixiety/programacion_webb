@@ -1,6 +1,9 @@
 <?php
 include("../config/conexion.php");
-$conexion = conectarDB();
+
+if (!isset($conexion) && isset($pdo)) {
+    $conexion = $pdo;
+}
 
 $nombre = $_POST['nombre'];
 $correo = $_POST['correo'];
@@ -15,7 +18,7 @@ $stmtVerificar->execute([$correo]);
 if($stmtVerificar->rowCount() > 0){
     echo "El correo ya existe";
 } else {
-    // 2. Insertamos en MariaDB
+    // 2. Insertamos en Postgres
     try {
         $sql = "INSERT INTO usuarios(nombre, correo, password) VALUES(?, ?, ?)";
         $stmt = $conexion->prepare($sql);

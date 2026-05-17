@@ -1,6 +1,9 @@
 <?php
 include("../config/conexion.php");
-$conexion = conectarDB();
+
+if (!isset($conexion) && isset($pdo)) {
+    $conexion = $pdo;
+}
 
 try {
     $sql = "SELECT id, nombre, ruta FROM imagenes ORDER BY id DESC";
